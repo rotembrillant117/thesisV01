@@ -2,6 +2,7 @@ from thesis.tokenizers.base import MyTokenizer
 from thesis.tokenizers.hf import HFTokenizer
 from third_party.sage_main.src.sage_tokenizer import *
 import pickle
+from pathlib import Path
 
 
 class MySageTokenizer(MyTokenizer):
@@ -14,6 +15,8 @@ class MySageTokenizer(MyTokenizer):
         self.embedding_schedule = embedding_schedule
         self.full_vocab_schedule = full_vocab_schedule
         self.experiment_name = f"{self.language}_{self.algo_name}_{vocab_size}"
+        # Set the root folder for Sage to be ./outputs, so results are at ./outputs/results
+        setSageFolder(Path("./outputs"))
         self.initial_hexed_vocab_path = f"./outputs/results/{self.experiment_name}/initial_vocab.vocab"
         self.tokenizer = None
         self.hf_tokenizer = None
