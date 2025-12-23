@@ -1,0 +1,120 @@
+﻿ask
+1.Jag har en liten ask.
+2.Asken står i min trädgård.
+bad
+1.Barnet måste ta sitt bad.
+2.Ett bad är nödvändigt nu.
+barn
+1.Alla barn måste gå i skolan.
+2.Hon vill gärna ha barn.
+block
+1.Nu skall vi köpa ett block att skriva på.
+2.Alla barn i skolan måste ha ett block.
+brand
+1.Det var en stor brand i Stockholm år 1783.
+2.Jag är rädd för brand hemma.
+diverse
+1.Han säljer diverse saker.
+2.Hon studerar diverse ämnen på universitetet.
+egg
+1.Kniven har en vass egg.
+2.Eggen måste vässas.
+far
+1.Far är rar.
+2.Min far är läkare.
+fart
+1.De håller för hög fart här.
+2.Jag gillar hög fart.
+fast
+1.Hans vilja är fast.
+2.Han har en fast anställning.
+fat
+1.Han har ett stort fat framför sig.
+2.Nu är deras fat tomt.
+flint
+1.Han har en rejäl flint.
+2.Han tittar på sin flint.
+gift
+1.Snart är hon gift.
+2.Hon vill ge honom gift.
+glass
+1.Glass är gott.
+2.Jag ãlskar glass.
+hot
+1.Hon ser honom som ett hot.
+2.Det är inget hot.
+i
+1.Det är varmt i Israel nu.
+2.Jag har ont i magen.
+is
+1.Is är  mycket kallt.
+2.Is är användbart.
+island
+1.Island är en ö.
+2.Vikingarna upptäckte Island.
+kid
+1.Rådjuret har ett kid.
+2.Det var ett vackert kid.
+kind
+1.Min högra kind är större än min vänstra.
+2.Han har ont i höger kind.
+lack
+1.Han vill köpa lack till sin stol.
+2.Målaren kommer att använda lack idag.
+last
+1.Bilen har en tung last.
+2.Tåget kan ta mycket last.
+leg
+1.Kan du visa mig ditt leg?
+2.Har han något leg?
+list
+1.En mycket skicklig list.
+2.En välkänd list.
+lump
+1.Han säljer bara lump.
+2.Jag gjorde lumpen i Kirune.
+lust
+1.Hon har lust att äta glass.
+2.Det är en lustt som är svår att tygla.
+mode
+1.Dagens mode kommer från Paris.
+2.Mode är dyrt.
+pregnant
+1.Hans tal var mycket pregnant.
+2.Hon uttrycker sig alltid mycket pregnant.
+prick
+1.En prick över bokstaven i.
+2.Hon är orolig över en prick på huden.
+process
+1.En process i domstol blir dyrt.
+2.Varför måste han alltid söka process?
+rest
+1.Det där är en rest från middagen.
+2.Jag ser ingen rest.
+roman
+1.Det här var en bra roman.
+2.Jag vill så gärna skriva en framgångsrik roman.
+sex
+1.Två plus fyra blir sex.
+2.Tolv delat med två är sex.
+sexton
+1.När hon var sexton köpte hon moped.
+2.Är man sexton år gammal får man snart köra bil.
+sin
+1.Han talar mycket om sin mamma.
+2.Vad vet hon om sin släkt?
+slang
+1.Vi behöver en slang i trädgården.
+2.Brandkåren hade med sig en lång slang.  
+slut
+1.Snart är filmen slut.
+2.Det var ett lyckligt slut.
+smoking
+1.Ikväll är det obligatoriskt med smoking.
+2.Jag har aldrig haft smoking på mig.
+stark
+1.Min syster är stark.
+2.Han är en stark man.
+tag
+1.Tag av dig skorna!
+2.Tag med dig något att äta!

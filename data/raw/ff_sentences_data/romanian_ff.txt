@@ -1,0 +1,24 @@
+actual
+1.Vremea actuală este caldă.
+2.Eu lucrez la un proiect actual.
+adept
+1.Maria este un adept al yoga.
+2.Fratele meu este un adept al unei echipe de fotbal.
+arc
+1.Am văzut un arc într-un film cu eroi.
+2.Am trecut pe sub un arc frumos în parc.
+car
+1.Car o pungă cu mâncare acasă.
+2.În fiecare zi car ghiozdanul la școală.
+far
+1.Am văzut un far la mare.
+2.Farul are o lumină puternică.
+pom
+1.În curte avem un pom cu mere.
+2.Pomul are multe fructe.
+pregnant
+1.El a spus ceva scurt și pregnant.
+2.Mesajul a fost simplu, dar pregnant.
+prospect
+1.Am citit prospectul medicamentului.
+2.Prospectul explică ce face medicamentul.
