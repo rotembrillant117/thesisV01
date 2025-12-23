@@ -12,8 +12,8 @@ class HFTokenizer(MyTokenizer):
         self.vocab_size = vocab_size
         self.algo_name = algo_name
         self.tokenizer = None
-        self.unk_token = "<UNK>"  # token for unknown words
-        self.spl_tokens = [ "<SEP>", "<MASK>", "<CLS>"]  # special tokens
+        self.unk_token = "[UNK]"  # token for unknown words
+        self.spl_tokens = [ "[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"]  # special tokens
     
     def __repr__(self):
         return f"{self.language}_{self.vocab_size}_{self.algo_name}"
@@ -25,15 +25,10 @@ class HFTokenizer(MyTokenizer):
         if "BPE" in self.algo_name:
             tokenizer = Tokenizer(BPE(unk_token=self.unk_token))
             trainer = BpeTrainer(special_tokens=self.spl_tokens, vocab_size=self.vocab_size)
-        elif "UNI" in self.algo_name:
+        else: #UNI
             tokenizer = Tokenizer(Unigram())
             trainer = UnigramTrainer(unk_token=self.unk_token, special_tokens=self.spl_tokens, vocab_size=self.vocab_size)
-        elif "WPC" in self.algo_name:
-            tokenizer = Tokenizer(WordPiece(unk_token=self.unk_token))
-            trainer = WordPieceTrainer(special_tokens=self.spl_tokens, vocab_size=self.vocab_size)
-        else:  # WLVL
-            tokenizer = Tokenizer(WordLevel(unk_token=self.unk_token))
-            trainer = WordLevelTrainer(special_tokens=self.spl_tokens, vocab_size=self.vocab_size)
+
         
         tokenizer.pre_tokenizer = Whitespace()
         tokenizer.train([self.training_corpus_dir], trainer)

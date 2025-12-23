@@ -26,7 +26,7 @@ def analyze_tokenization(tokenizers_list, word_list, l1, l2, categories):
     """
     # init cases with value 0
     num_tokens_diff = {k: [] for k in categories}
-    
+
     for word in word_list:
         word_tokenization = []
         num_tokens = []
@@ -50,9 +50,8 @@ def analyze_tokenization(tokenizers_list, word_list, l1, l2, categories):
         # Same tokenization between language1 and langauge2, but different from Multi tokenizer
         elif word_tokenization[0] == word_tokenization[1]:
             num_tokens_diff[f"{l1}_t=={l2}_t"].append(word)
-    
-    return num_tokens_diff
 
+    return num_tokens_diff
 
 
 def extract_context(ff_words, text, window=5, max_context=100_000):
@@ -67,7 +66,7 @@ def extract_context(ff_words, text, window=5, max_context=100_000):
     # Split the text into words
     words = text.split()
     contexts = {}
-    
+
     # Loop over each word to find
     for ff in ff_words:
         contexts[ff] = []
@@ -94,9 +93,9 @@ def get_pos_count(ff_words, context, nlp):
     :param nlp: spacy model
     :return: a dictionary {ff_word1: {POS1: x, POS2: y, POS3: z,...}}
     """
-    
+
     ff_pos_counts = {f: dict() for f in ff_words}
-    
+
     for ff in ff_words:
         for c in context[ff]:
             doc = nlp(c)
@@ -110,7 +109,7 @@ def get_pos_count(ff_words, context, nlp):
             doc = nlp(ff)
             for token in doc:
                 ff_pos_counts[ff][token.pos_] = 1
-    
+
     return ff_pos_counts
 
 
@@ -125,7 +124,7 @@ def get_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_co
     """
     spacy_dic = {"en": "en_core_web_sm", "fr": "fr_core_news_sm", "de": "de_core_news_sm", "it": "it_core_news_sm",
                  "ro": "ro_core_news_sm", "es": "es_core_news_sm", "se": "sv_core_news_sm"}
-    
+
     nlp1 = spacy.load(spacy_dic[l1])
     nlp2 = spacy.load(spacy_dic[l2])
     # corpus_path1 = get_training_corpus_dir(training_corpus_dir1)
@@ -133,7 +132,7 @@ def get_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_co
     with open(l1_training_corpus_dir, "r") as corpus1, open(l2_training_corpus_dir, "r") as corpus2:
         corpus_text1 = corpus1.read().replace("\n", " ")
         corpus_text2 = corpus2.read().replace("\n", " ")
-    
+
     # getting all ff words
     ff_words = []
     for category in categories:
@@ -142,11 +141,11 @@ def get_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_co
     # getting context of ff appearances
     context1 = extract_context(ff_words, corpus_text1)
     context2 = extract_context(ff_words, corpus_text2)
-    
+
     # counting the POS for each word in the different languages
     ff_pos1_counts = get_pos_count(ff_words, context1, nlp1)
     ff_pos2_counts = get_pos_count(ff_words, context2, nlp2)
-    
+
     # calculate distribution of POS for each category
     tokenization_category_pos1 = {category: dict() for category in categories}
     tokenization_category_pos2 = {category: dict() for category in categories}
@@ -158,7 +157,7 @@ def get_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_co
             if ff in num_tokens_diff[category]:
                 tokenization_category_pos1[category][pos1] = tokenization_category_pos1[category].get(pos1, 0) + 1
                 tokenization_category_pos2[category][pos2] = tokenization_category_pos2[category].get(pos2, 0) + 1
-    
+
     return tokenization_category_pos1, tokenization_category_pos2
 
 
@@ -191,6 +190,7 @@ FALLBACK_COLORS = [
     "navy", "darkgreen", "goldenrod", "maroon", "indigo", "slateblue", "darkolivegreen",
     "peru", "firebrick", "orchid", "royalblue", "yellowgreen", "khaki", "crimson"
 ]
+
 
 def pos_order_and_colors(all_pos):
     """Return a stable POS order and tag→color map.
@@ -229,12 +229,14 @@ def grid(n):
     rows = math.ceil(n / cols)
     return rows, cols
 
+
 # ------------------------------
 # Main plot function
 # ------------------------------
 
 def plot_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_corpus_dir, categories, algo, dir):
-    tokenization_category_pos1, tokenization_category_pos2 = get_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir,
+    tokenization_category_pos1, tokenization_category_pos2 = get_pos_data(num_tokens_diff, l1, l2,
+                                                                          l1_training_corpus_dir,
                                                                           l2_training_corpus_dir, categories)
     all_pos = collect_all_pos(tokenization_category_pos1, tokenization_category_pos2)
     if not all_pos:
@@ -254,8 +256,9 @@ def plot_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_c
         x = list(range(len(pos_order)))
         for i, tag in enumerate(pos_order):
             color = color_map[tag]
-            ax.bar(i - width/2, counts_l1.get(tag, 0), width, color=color, edgecolor="black", linewidth=0.6, hatch="")
-            ax.bar(i + width/2, counts_l2.get(tag, 0), width, color=color, edgecolor="black", linewidth=0.6, hatch="//")
+            ax.bar(i - width / 2, counts_l1.get(tag, 0), width, color=color, edgecolor="black", linewidth=0.6, hatch="")
+            ax.bar(i + width / 2, counts_l2.get(tag, 0), width, color=color, edgecolor="black", linewidth=0.6,
+                   hatch="//")
         ax.set_title(category)
         ax.set_xlabel("POS tag")
         ax.set_ylabel("Count of words (majority POS)")
@@ -267,17 +270,19 @@ def plot_pos_data(num_tokens_diff, l1, l2, l1_training_corpus_dir, l2_training_c
     for j in range(n, total_axes):
         r, c = divmod(j, cols)
         axes[r][c].axis('off')
-    pos_handles = [Patch(facecolor=color_map[tag], edgecolor='black', label=tag) for tag in pos_order_base if tag in all_pos]
+    pos_handles = [Patch(facecolor=color_map[tag], edgecolor='black', label=tag) for tag in pos_order_base if
+                   tag in all_pos]
     lang_handles = [
         Patch(facecolor="lightgray", edgecolor='black', hatch="", label=f"{l1}"),
         Patch(facecolor="lightgray", edgecolor='black', hatch="//", label=f"{l2}"),
     ]
     legend_handles = lang_handles + pos_handles
     fig.subplots_adjust(top=0.88)  # Leave space for title and legend
-    fig.legend(handles=legend_handles, loc='upper center', ncol=min(6, len(legend_handles)), frameon=True, bbox_to_anchor=(0.5, 0.94))
+    fig.legend(handles=legend_handles, loc='upper center', ncol=min(6, len(legend_handles)), frameon=True,
+               bbox_to_anchor=(0.5, 0.94))
     fig.suptitle(f"POS distributions by tokenization category — algo={algo}, {l1} vs {l2} | {case_counts}", y=0.995)
     fig.tight_layout(rect=(0.02, 0.04, 0.98, 0.90))
-    out_name = f"pos_tokenization_cases_{algo}_{l1}_{l2}.png"
+    out_name = f"01_pos_distribution_{l1}_{l2}_{algo}.png"
     fig.savefig(os.path.join(dir, out_name), dpi=220)
     plt.close(fig)
 
@@ -293,19 +298,19 @@ def chi_square_test(ff_num_tokens_diff, homographs_tokenization_cases, l1, l2, a
     :param algo: the name of the algorithm
     :return:
     """
-    
+
     categories, ff_counts, same_words_counts = [], [], []
     for cat in ff_num_tokens_diff.keys():
         categories.append(cat)
         ff_counts.append(len(ff_num_tokens_diff[cat]))
         same_words_counts.append(len(homographs_tokenization_cases[cat]))
-    
+
     # Create contingency table (2xN)
     contingency_table = np.array([ff_counts, same_words_counts])
-    
+
     # Perform chi-square test
     chi2, p_value, dof, expected = chi2_contingency(contingency_table)
-    
+
     # Print results
     print(f"Chi-Squared Test for {algo} on {l1}-{l2}")
     print(f"Categories: {categories}")
@@ -314,12 +319,12 @@ def chi_square_test(ff_num_tokens_diff, homographs_tokenization_cases, l1, l2, a
     print(f"Chi-squared statistic: {chi2:.4f}")
     print(f"Degrees of freedom: {dof}")
     print(f"P-value: {p_value:.4f}")
-    
+
     if p_value < 0.05:
         print("✅ Statistically significant difference (p < 0.05)")
     else:
         print("❌ No statistically significant difference (p >= 0.05)")
-    
+
     return chi2, dof, p_value, expected
 
 
@@ -335,13 +340,13 @@ def plot_tokenization_cases(num_tokens_diff, algo, l1, l2, categories, word_type
     :param dir: directory to save graph
     :return:
     """
-    
+
     plt.figure(figsize=(12, 14))
     x_axis = categories
     y_axis = [len(num_tokens_diff[key]) for key in x_axis]
     distribution = [f"{key}: {len(num_tokens_diff[key])}" for key in x_axis]
     num_words = sum(y_axis)
-    fig_save_path = f"{dir}/{word_types}_{l1}_{l2}_{algo}.png"
+    fig_save_path = f"{dir}/02_token_cases_{word_types}_{l1}_{l2}_{algo}.png"
     title = f"Tokenization Cases\n{l1}, {l2}\nAlgo: {algo}\nNum words: {num_words}\nDistribution: {distribution}"
     plt.bar(x_axis, y_axis)
     plt.xticks(rotation=30, fontsize=13)
@@ -364,10 +369,10 @@ def plot_average_word_length(num_tokens_diff, algo, dir, l1, l2, categories):
     :return:
     """
     means, stds = get_average_word_length(num_tokens_diff, categories)
-    
-    fig_save_path = f"{dir}/avg_word_length_{l1}_{l2}_{algo}.png"
+
+    fig_save_path = f"{dir}/03_stat_avg_word_len_{l1}_{l2}_{algo}.png"
     title = f"Tokenization Cases - Average Word Length\nMean ± Std\n{l1}, {l2}\nAlgo: {algo}"
-    
+
     plt.figure(figsize=(8, 6))
     x = np.arange(len(categories))
     plt.bar(x, means, yerr=stds, capsize=5, edgecolor='black')
@@ -409,10 +414,10 @@ def plot_average_num_tokens(tokenizers_list, num_tokens_diff, algo, dir, l1, l2,
     :param categories: tokenization cases
     :return:
     """
-    
+
     bar_means, bar_positions, bar_stds, bar_width, flat_labels = get_avg_num_tokens(algo, l1, l2, num_tokens_diff,
                                                                                     tokenizers_list, categories)
-    
+
     # Plotting
     plt.figure(figsize=(12, 6))
     plt.bar(bar_positions, bar_means, yerr=bar_stds, capsize=5, width=bar_width, edgecolor='black')
@@ -420,11 +425,10 @@ def plot_average_num_tokens(tokenizers_list, num_tokens_diff, algo, dir, l1, l2,
     plt.ylabel("Number of tokens")
     plt.title(f"Tokenization Cases - Average Tokens\nMean ± Std\n{l1}, {l2}\nAlgo: {algo}", fontsize=18)
     plt.tight_layout()
-    
-    fig_save_path = f"{dir}/avg_tokens_{l1}_{l2}_{algo}.png"
+
+    fig_save_path = f"{dir}/03_stat_avg_tokens_{l1}_{l2}_{algo}.png"
     plt.savefig(fig_save_path)
     plt.close()
-
 
 
 def get_avg_num_tokens(algo, l1, l2, num_tokens_diff, tokenizers_list, categories):
@@ -476,7 +480,7 @@ def get_avg_num_tokens(algo, l1, l2, num_tokens_diff, tokenizers_list, categorie
     group_spacing = 1  # space between groups
     for cat in categories:
         data = num_tokens_case[cat]
-        
+
         if cat != "same_splits":  # grouped case
             n = len(data)
             for i in range(n):
@@ -519,14 +523,14 @@ def plot_frequency_comparison(num_tokens_diff, algo, dir, l1, l2, word_freqs1, w
     :param categories: list of categories
     :return:
     """
-    
+
     mean1, mean2 = [], []
     lower1, upper1 = [], []
     lower2, upper2 = [], []
     category_freq1 = dict()
     category_freq2 = dict()
     words_in_corpus = 0
-    
+
     # Collect frequency data
     for category in categories:
         category_freq1[category] = []
@@ -537,29 +541,29 @@ def plot_frequency_comparison(num_tokens_diff, algo, dir, l1, l2, word_freqs1, w
                 category_freq1[category].append(word_freqs1[word])
                 category_freq2[category].append(word_freqs2[word])
                 words_in_corpus += 1
-    
+
     # Compute mean and std
     for category in categories:
         freqs1 = category_freq1[category]
         freqs2 = category_freq2[category]
-        
+
         m1 = np.mean(freqs1) if freqs1 else 0
         s1 = np.std(freqs1) if freqs1 else 0
         m2 = np.mean(freqs2) if freqs2 else 0
         s2 = np.std(freqs2) if freqs2 else 0
-        
+
         mean1.append(m1)
         mean2.append(m2)
-        
+
         # Asymmetric error bars
         lower1.append(min(s1, m1) if m1 > 0 else 0)
         upper1.append(s1)
-        
+
         lower2.append(min(s2, m2) if m2 > 0 else 0)
         upper2.append(s2)
-    
+
     # Plot
-    fig_save_path = f"{dir}/frequencies_{l1}_{l2}_{algo}.png"
+    fig_save_path = f"{dir}/03_stat_frequencies_{l1}_{l2}_{algo}.png"
     plt.figure(figsize=(10, 6))
     bar_width = 0.35
     x = np.arange(len(categories))
@@ -570,7 +574,9 @@ def plot_frequency_comparison(num_tokens_diff, algo, dir, l1, l2, word_freqs1, w
             label=f"{l2}")
     plt.xticks(x, categories, rotation=45)
     plt.ylabel("Frequency")
-    plt.title(f"Tokenization Case Frequencies\nMean ± Std\n{l1}_{l2}_{algo}\nFalse Friends in Corpus: {words_in_corpus}", fontsize=18)
+    plt.title(
+        f"Tokenization Case Frequencies\nMean ± Std\n{l1}_{l2}_{algo}\nFalse Friends in Corpus: {words_in_corpus}",
+        fontsize=18)
     plt.legend()
     plt.tight_layout()
     plt.savefig(fig_save_path)
@@ -586,7 +592,7 @@ def missing_ff_in_corpus(ff_data, word_frequencies, dir):
     :param dir: the directory to save the .txt file
     :return:
     """
-    
+
     with open(f"{dir}/missing_words.txt", 'w', encoding='utf-8') as f:
         for word in ff_data:
             if word not in word_frequencies.keys():
@@ -628,22 +634,22 @@ def earth_movers_dist(categories, l1, l2, source, target, track_target=None):
     """
     s = np.array([source[c] for c in categories], dtype=np.float64)
     t = np.array([target[c] for c in categories], dtype=np.float64)
-    
+
     # Normalizing
     s /= s.sum()
     t /= t.sum()
-    
+
     n = len(s)
-    
+
     # Create distance matrix
     D = np.array([[dist(l1, l2, c1, c2) for c1 in categories] for c2 in categories], dtype=np.float64)
     # we are trying to minimize c.T@x where x is the solution for the linear program. So, c is the cost
     c = D.flatten()
-    
+
     # Creating equality constraints
     A_eq = []
     b_eq = []
-    
+
     # Supply constraints
     # [[ f00, f01, f02 ],
     # [ f10, f11, f12 ], ---> [f00, f01, f02, f10, f11, f12, f20, f21, f22]
@@ -654,14 +660,14 @@ def earth_movers_dist(categories, l1, l2, source, target, track_target=None):
         matrix[i, :] = 1
         A_eq.append(matrix.flatten())
         b_eq.append(s[i])
-    
+
     # We add more constraints. A_eq[i][j] for all i must sum to t[j]. This means we want to get exactly the amount of "dirt" at t[j]
     for j in range(n):
         matrix = np.zeros((n, n))
         matrix[:, j] = 1  # All rows in column j (incoming flows)
         A_eq.append(matrix.flatten())
         b_eq.append(t[j])
-    
+
     res = linprog(c, A_eq=A_eq, b_eq=b_eq, bounds=(0, None), method='highs')
     flow_matrix = res.x.reshape((n, n))
     # Elementwise multiplication
@@ -694,8 +700,9 @@ def dist(l1, l2, source, target):
         f"{l1}_t=={l2}_t": {f"{l1}_t==multi_t": 0.7, f"{l2}_t==multi_t": 0.7, f"same_splits": 1, "different_splits": 1,
                             f"{l1}_t=={l2}_t": 0}
     }
-    
+
     return d[source][target]
+
 
 def emd2(source, target, l1, l2, categories, algo1, algo2):
     """
@@ -713,7 +720,6 @@ def emd2(source, target, l1, l2, categories, algo1, algo2):
     t = np.array([target[c] for c in categories], dtype=np.float64)
     D = np.array([[dist(l1, l2, c1, c2) for c1 in categories] for c2 in categories], dtype=np.float64)
 
-    
     # Normalizing
     s /= s.sum()
     t /= t.sum()
@@ -724,6 +730,7 @@ def emd2(source, target, l1, l2, categories, algo1, algo2):
     print(f"Target Distribution {algo2}: {target}")
     print(f"Earth Mover Distance: {ans}")
 
+
 def get_avg_chars_per_token(tokenizer):
     """
     Calculates the average characters per token for tokenizer vocabulary
@@ -733,6 +740,7 @@ def get_avg_chars_per_token(tokenizer):
     vocab = tokenizer.get_vocab()
     num_chars = sum([len(v) for v in vocab])
     return num_chars / len(vocab)
+
 
 def get_token_length_distribution(tokenizer):
     """
@@ -759,12 +767,13 @@ def words_moved_to_target(num_tokens_diff1, num_tokens_diff2, categories, target
     :param target: which words moved to target in tokenization cases 2
     :return: words moved to target
     """
-    words_moved = {c:[] for c in categories}
+    words_moved = {c: [] for c in categories}
     for c, words in num_tokens_diff1.items():
         added = set(num_tokens_diff1[c]) & set(num_tokens_diff2[target])
         for w in added:
             words_moved[c].append(w)
     return words_moved
+
 
 def words_removed_from_target(num_tokens_diff1, num_tokens_diff2, categories, target):
     """
@@ -783,14 +792,17 @@ def words_removed_from_target(num_tokens_diff1, num_tokens_diff2, categories, ta
                     words_moved[c].append(w)
     return words_moved
 
+
 def words_moved_to_target_ff(num_tokens_diff1, num_tokens_diff2, ff_words, categories, target):
     words_moved = words_moved_to_target(num_tokens_diff1, num_tokens_diff2, categories, target)
-    ff_words_moved = {c:[] for c in categories}
+    ff_words_moved = {c: [] for c in categories}
     for c, words in words_moved.items():
         for ff in ff_words:
             if ff in words:
                 ff_words_moved[c].append(ff)
     return ff_words_moved
+
+
 # INTRINSIC ANALYSIS FUNCTIONS
 
 def ff_intrinsic_analysis(l1, l2, ex):
@@ -803,17 +815,16 @@ def ff_intrinsic_analysis(l1, l2, ex):
         ff_data = list(csv.DictReader(f))
     en_tokenizer = ex.l1_tokenizer
     l2_tokenizer = ex.l2_tokenizer
-    en_l2_tokenizer  = ex.l1_l2_tokenizer
+    en_l2_tokenizer = ex.l1_l2_tokenizer
     path = f"{ex.analysis_dir}/intrinsic_analysis"
     os.makedirs(path, exist_ok=True)
-    
+
     spacy_dic = {"en": "en_core_web_sm", "fr": "fr_core_news_sm", "de": "de_core_news_sm", "it": "it_core_news_sm",
                  "ro": "ro_core_news_sm", "es": "es_core_news_sm", "se": "sv_core_news_sm"}
-    
+
     nlp1 = spacy.load(spacy_dic[l1])
     nlp2 = spacy.load(spacy_dic[l2])
-    
-        
+
     with open(f"{path}/{ex.algo_name}_intrinsic.txt", 'w', encoding='utf-8') as f:
         for ff_row in ff_data:
             ff_word = ff_row["False Friend"]
@@ -821,7 +832,8 @@ def ff_intrinsic_analysis(l1, l2, ex):
             wrong_translation = ff_row["Wrong Translation"]
             en_sentences = [ff_row["en sentence1"], ff_row["en sentence2"]]
             l2_sentences = [ff_row[f"{l2} sentence1"], ff_row[f"{l2} sentence2"]]
-            f.write("##########################################################################################################################\n")
+            f.write(
+                "##########################################################################################################################\n")
             f.write(f"Analysis for False Friend word: {ff_word}\n")
             f.write(f"Correct Translation: {correct_translation}\n")
             f.write(f"Wrong Translation: {wrong_translation}\n\n")
@@ -857,4 +869,5 @@ def ff_intrinsic_analysis(l1, l2, ex):
                 for w in l2_sentences[i].split(" "):
                     f.write(f"{en_l2_tokenizer.tokenize(w)} ")
                 f.write("\n")
-            f.write("##########################################################################################################################\n")
+            f.write(
+                "##########################################################################################################################\n")
