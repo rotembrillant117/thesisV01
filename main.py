@@ -12,7 +12,7 @@ from thesis.tokenizers.sage import MySageTokenizer
 from thesis.tokenizers.hf import HFTokenizer
 from thesis.utils.log_utils import setup_logger
 from thesis.utils.analysis_utils import get_categories, get_ex_couple, compare_trials
-import os
+
 
 
 def parse_args(path):
@@ -26,8 +26,14 @@ def parse_args(path):
     return data
 
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
 def fix_path(path):
-    return path.strip().replace("\\", "/")
+    path = path.strip().replace("\\", "/")
+    if not os.path.isabs(path):
+        return os.path.join(PROJECT_ROOT, path)
+    return path
 
 
 def create_multi_text_file(path1, path2, file_name, num_rows=300_000, seed=42):
@@ -76,7 +82,7 @@ def init_experiments(data, l1_tokenizers):
         l2_training_corpus_dir = fix_path(l2_data["training_data"])
         l2_words_dir = fix_path(l2_data["words"])
         ff_words_path = fix_path(l2_data["ff"])
-        l1_l2_training_corpus_dir = f"./data/raw/training_data/{l2}/{l1}_{l2}_corpus.txt"
+        l1_l2_training_corpus_dir = fix_path(f"./data/raw/training_data/{l2}/{l1}_{l2}_corpus.txt")
         create_multi_text_file(l1_training_corpus_dir, l2_training_corpus_dir, l1_l2_training_corpus_dir)
         for algo in data["algos"]:
             l1_tokenizer = l1_tokenizers[algo]
@@ -108,7 +114,7 @@ def train_l1_tokenizers(data):
     training_corpus_dir = fix_path(l1_data['training_data'])
     for algo in algos:
         if "SAGE" in algo:
-            dir = f"./outputs/results/{l1}_{algo}_{vocab_size}"
+            dir = fix_path(f"./outputs/results/{l1}_{algo}_{vocab_size}")
             os.makedirs(dir, exist_ok=True)
             logger.info(f"created directory {dir}")
             tokenizer = MySageTokenizer(l1_data["language"], training_corpus_dir, vocab_size, algo, embedding_schedule,
@@ -174,7 +180,7 @@ if __name__ == '__main__':
         logger.info("Finished saving experiments")
     else:
         vocab_size = str(data["vocab_size"])
-        experiments = load_experiments(f"./outputs/experiments/{vocab_size}")
+        experiments = load_experiments(fix_path(f"./outputs/experiments/{vocab_size}"))
         logger.info("Finished loading experiments")
     
     for l2, exp_list in experiments.items():
