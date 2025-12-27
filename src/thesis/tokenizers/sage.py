@@ -64,7 +64,10 @@ class MySageTokenizer(MyTokenizer):
         # The final SaGe vocab is saved to a .vocab file in a certain path. Opens the file and turns it to bytes format for SaGeTokenizer object
         with open(self._get_final_vocab_path(), "r") as f:
             initial_vocab = [bytes.fromhex(line.strip()) for line in f]
-        tokenizer = SaGeTokenizer(initial_vocabulary=initial_vocab)
+
+        # Calculate max_len from the loaded vocabulary to ensure correct tokenization
+        final_max_len = max([len(token) for token in initial_vocab]) if initial_vocab else 16
+        tokenizer = SaGeTokenizer(initial_vocabulary=initial_vocab, max_len=final_max_len)
         
         self.tokenizer = tokenizer
     

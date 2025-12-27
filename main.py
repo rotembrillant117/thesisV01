@@ -4,6 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 import torch
 import json
 import random
+from pathlib import Path
 from thesis.core.stats import *
 from thesis.utils.find_ff_all_words_all_languages import get_same_words_across_languages
 from thesis.core.experiment import Experiment
@@ -26,14 +27,13 @@ def parse_args(path):
     return data
 
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = Path(__file__).resolve().parent
 
 
 def fix_path(path):
-    path = path.strip().replace("\\", "/")
-    if not os.path.isabs(path):
-        return os.path.join(PROJECT_ROOT, path)
-    return path
+    # If 'path' is absolute, the / operator ignores the left side (PROJECT_ROOT)
+    # If 'path' is relative, it joins them.
+    return str((PROJECT_ROOT / path.strip()).resolve())
 
 
 def create_multi_text_file(path1, path2, file_name, num_rows=300_000, seed=42):

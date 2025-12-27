@@ -118,8 +118,9 @@ class Experiment:
             self._create_experiment_dir_helper(f"./outputs/results/{self.l1}_{self.l2}_{self.algo_name}_{self.vocab_size}")
 
     def _create_experiment_dir_helper(self, path):
-        os.makedirs(path, exist_ok=True)
-        logger.info(f"created directory {path}")
+        if not os.path.exists(path):
+            os.makedirs(path, exist_ok=True)
+            logger.info(f"created directory {path}")
     
     def save_experiment(self):
         with open(f"{self.main_dir}/{self.__repr__()}.pkl", "wb") as f:
